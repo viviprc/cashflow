@@ -16,23 +16,26 @@
                   <th class="text-left">Cantidad</th>
                   <th class="text-left">Precio/unidad</th>
                   <th class="text-left">Subtotal</th>
+                  <th class="text-left">Eliminar</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in products" :key="item.name">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.cantidad }}</td>
-                  <td>{{ item.pu }}</td>
-                  <td>{{ item.subtotal }}</td>
+                <tr v-for="(item, index) in sale" :key="item.data.name">
+                  <td>{{ item.data.name }}</td>
+                  <td><v-text-field :value="item.quantity" @input="(qty) => changeQuantity(qty, index)"></v-text-field></td>
+                  <td>{{ item.data.price }}</td>
+                  <td>{{ parseInt(item.data.price, 10) * item.quantity }}</td>
+                  <td><v-icon @click="eliminateProduct(index)">mdi-delete</v-icon></td>
                 </tr>
               </tbody>
             </template>
           </v-simple-table>
         </div>
         <div class="flex-column justify-end">
-          <h4 class="text-right ma-3">Total $44870</h4>
-          <v-btn color="success" class="ma-2" small>Finalizar</v-btn>
-          <v-btn color="error" class="ma-2" small>Cancelar</v-btn>
+          <h4 class="text-right ma-3">Total ${{saleTotal}}</h4>
+          <v-select :items="['Efectivo', 'Transbank']" v-model="saleType"></v-select>
+          <v-btn color="success" class="ma-2" small @click="saleFinish">Finalizar</v-btn>
+          <v-btn color="error" class="ma-2" small @click="saleCancel">Cancelar</v-btn>
         </div>
       </v-col>
       <v-divider class="mx-4" vertical></v-divider>
@@ -41,85 +44,180 @@
           <v-textarea
             append-icon="mdi-magnify"
             class="mx-2"
-            label="plaf"
+            label="Buscar..."
+            v-model="textFilter"
             rows="1"
             flat
           ></v-textarea>
         </div>
         <div>
-          <v-list class="pl-10" dense>
+          <template>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Nombre</th>
+                    <th class="text-left">Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="item in filterArray"
+                    :key="item.data.name"
+                    @click="select(item)"
+                  >
+                    <td>{{ item.data.name }}</td>
+                    <td>{{ item.data.price }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </template>
+
+          <v-list v-if="selectedProduct" class="pl-10" dense>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>sku</v-list-item-subtitle>
-                <v-list-item-title>392</v-list-item-title>
+                <v-list-item-title>{{
+                  selectedProduct.data.sku
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>Nombre producto</v-list-item-subtitle>
-                <v-list-item-title>PLAFON LED 31 CM 12 W</v-list-item-title>
+                <v-list-item-title>{{
+                  selectedProduct.data.name
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>Marca</v-list-item-subtitle>
-                <v-list-item-title>JUST HOME COLLECTION</v-list-item-title>
+                <v-list-item-title>{{
+                  selectedProduct.data.trademark
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>Precio</v-list-item-subtitle>
-                <v-list-item-title>$18990</v-list-item-title>
+                <v-list-item-title>{{
+                  selectedProduct.data.price
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>Cantidad</v-list-item-subtitle>
                 <v-text-field
-                :value= '1'
-                :rules="rules"
-                hide-details="auto"
-              ></v-text-field>
+                  hide-details="auto"
+                  v-model="selectedQuantity"
+                ></v-text-field>
               </v-list-item-content>
             </v-list-item>
 
             <div class="text-right ma-5 pt-10">
-              
-              <v-btn color="success" class="ma-2" x-small>Agregar</v-btn>
-              <v-btn color="error" class="ma-2" x-small>Cancelar</v-btn>
+              <v-btn color="success" class="ma-2" x-small @click="addToSale"
+                >Agregar</v-btn
+              >
+              <v-btn
+                color="error"
+                class="ma-2"
+                x-small
+                @click="selectedProduct = null"
+                >Cancelar</v-btn
+              >
             </div>
           </v-list>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
+        </div></v-col
+      ></v-row
+    ></v-container
+  >
 </template>
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "Sale",
   data() {
     return {
-      products: [
-        {
-          categoria: "Pinturas",
-          name: "ESMALTE AL AGUA PREMIUM SATINADO AZUL LASHA",
-          cantidad: 2,
-          stock: 23,
-          marca: "KOLOR",
-          pu: 20990,
-          subtotal: 41980,
-        },
-        {
-          categoria: "Pinturas",
-          name: 'SET DE PUNTAS IMPACTO #2x2" 5P',
-          cantidad: 1,
-          stock: 60,
-          marca: "UBERMANN",
-          pu: 2890,
-          subtotal: 2890,
-        },
-      ],
+      search: "",
+      selectedQuantity: 1,
+      editQuantity: this.selectedQuantity,
+      selectedProduct: null,
+      sale: [],
+      filterArray: [],
+      saleType: 'Efectivo',
+      // products: [
+      //   {
+      //     categoria: "Pinturas",
+      //     name: "ESMALTE AL AGUA PREMIUM SATINADO AZUL LASHA",
+      //     cantidad: 2,
+      //     stock: 23,
+      //     marca: "KOLOR",
+      //     pu: 20990,
+      //     subtotal: 41980,
+      //   },
+      //   {
+      //     categoria: "Pinturas",
+      //     name: 'SET DE PUNTAS IMPACTO #2x2" 5P',
+      //     cantidad: 1,
+      //     stock: 60,
+      //     marca: "UBERMANN",
+      //     pu: 2890,
+      //     subtotal: 2890,
+      //   },
+      // ],
     };
+  },
+  created() {
+    this.getProducts();
+  },
+  methods: {
+    ...mapActions(["getProducts", "addSale"]),
+    select(item) {
+      this.selectedProduct = item;
+    },
+    addToSale() {
+      const quantity = parseInt(this.selectedQuantity, 10);
+      this.sale.push({ ...this.selectedProduct, quantity }); 
+    },
+    eliminateProduct(index){
+      this.sale.splice(index, 1)
+    },
+    saleCancel(){
+      this.sale = []
+    },
+    saleFinish(){
+      this.addSale({type:this.saleType, products: this.sale, total: this.saleTotal})
+    },
+    changeQuantity(quantity, index){
+      const validQuantity = quantity === '' ? '0' : quantity
+      this.sale[index].quantity = parseInt(validQuantity)
+    }
+  },
+  computed: {
+    ...mapState(["products"]),
+    textFilter: {
+      get() {
+        return this.search;
+      },
+      set(value) {
+        value = value.toUpperCase();
+        this.filterArray = this.products.filter(
+          (p) =>
+            p.data.name.indexOf(value) !== -1 ||
+            p.data.sku.indexOf(value) !== -1
+        );
+        this.search = value;
+      },
+    },
+    saleTotal() {
+      return this.sale.reduce(
+        (acumulado, actual) => acumulado + actual.data.price * actual.quantity,
+        0
+      );
+    },
   },
 };
 </script>
