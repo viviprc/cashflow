@@ -45,6 +45,7 @@
   </v-container>
 </template>
 <script>
+import firebase from 'firebase'
 export default {
   name: "Navbar",
   data() {
@@ -63,12 +64,18 @@ export default {
     goTo(path){
       const fullpath = `/${path}`;
       if(path == 'logout'){
-        console.log('logout')
+        this.logout()
 
       }else if(this.$router.history.current.path !== fullpath){
         this.$router.push(fullpath)
       }
-    }
+    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => this.$router.push("login"));
+    },
   }
 };
 </script>
