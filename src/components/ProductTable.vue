@@ -20,7 +20,7 @@
       <v-data-table
         dense
         :headers="headers"
-        :items="products"
+        :items="tableProducts"
         :search="search"
         sort-by="stock"
         class="elevation-1 mt-5"
@@ -58,7 +58,7 @@
                           label="Nombre"
                         ></v-text-field>
                         <v-text-field
-                          v-model="editedItem.categoria"
+                          v-model="editedItem.category"
                           label="Categoria"
                         ></v-text-field>
                       </v-col>
@@ -76,13 +76,13 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.marca"
+                          v-model="editedItem.trademark"
                           label="Marca"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.precio"
+                          v-model="editedItem.price"
                           label="Precio"
                         ></v-text-field>
                       </v-col>
@@ -126,54 +126,62 @@
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
-        <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
-        </template>
       </v-data-table>
     </v-container>
   </div>
 </template>
 <script>
+import firebase from "firebase";
+import { mapState, mapActions } from "vuex";
 export default {
-  data: () => ({
-    search: "",
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      {
-        text: "Nombre Producto",
-        align: "start",
-        sortable: false,
-        value: "name",
+  name: "ProducTable",
+  data() {
+    return {
+      search: "",
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: "Nombre Producto",
+          align: "start",
+          sortable: false,
+          value: "name",
+        },
+        { text: "Categoria", value: "category" },
+        { text: "Sku", value: "sku" },
+        { text: "Stock", value: "stock" },
+        { text: "Marca", value: "trademark" },
+        { text: "Precio", value: "price" },
+        { text: "Acciones", value: "actions", sortable: false },
+      ],
+      editedIndex: -1,
+      editedItem: {
+        name: "",
+        sku: 0,
+        stock: 0,
+        trademark: 0,
+        price: 0,
       },
-      { text: "Categoria", value: "categoria" },
-      { text: "Sku", value: "sku" },
-      { text: "Stock", value: "stock" },
-      { text: "Marca", value: "marca" },
-      { text: "Precio", value: "precio" },
-      { text: "Acciones", value: "actions", sortable: false },
-    ],
-    products: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      sku: 0,
-      stock: 0,
-      marca: 0,
-      precio: 0,
-    },
-    defaultItem: {
-      name: "",
-      sku: 0,
-      stock: 0,
-      marca: 0,
-      precio: 0,
-    },
-  }),
+      defaultItem: {
+        name: "",
+        sku: 0,
+        stock: 0,
+        trademark: 0,
+        price: 0,
+      },
+    };
+  },
 
   computed: {
+    ...mapState(["products"]),
     formTitle() {
       return this.editedIndex === -1 ? "Agregar producto" : "Editar Producto";
+    },
+    tableProducts() {
+      return this.products.map((p) => p.data);
+    },
+    productId() {
+      return this.products.map((p) => p.id);
     },
   },
 
@@ -186,112 +194,30 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
-  },
   methods: {
-    initialize() {
-      this.products = [
-        {
-          categoria: "Pinturas",
-          name: "MARTILLO STHT51391-40",
-          sku: 159,
-          stock: 50,
-          marca: "STANLEY",
-          precio: 8290,
-        },
-        {
-          categoria: "Pinturas",
-          name: "ESMALTE AL AGUA PREMIUM SATINADO AZUL LASHA",
-          sku: 237,
-          stock: 23,
-          marca: "KOLOR",
-          precio: 20990,
-        },
-        {
-          categoria: "Pinturas",
-          name: 'SET DE PUNTAS IMPACTO #2x2" 5P',
-          sku: 262,
-          stock: 60,
-          marca: "UBERMANN",
-          precio: 2890,
-        },
-        {
-          categoria: "Pinturas",
-          name: "MONOMANDO FLEXIBLE PARA LAVAPLATOS NEGRO",
-          sku: 305,
-          stock: 15,
-          marca: "SENSI DACQUA",
-          precio: 29990,
-        },
-        {
-          categoria: "Pinturas",
-          name: "2 x 2 x 3,20 M PINO DIMENSIONADO VERDE",
-          sku: 356,
-          stock: 50,
-          marca: "GENERICO",
-          precio: 1210,
-        },
-        {
-          categoria: "Pinturas",
-          name: "1 x 6 x 3,20 M PINO DIMENSIONADO VERDE",
-          sku: 375,
-          stock: 32,
-          marca: "GENERICO",
-          precio: 2290,
-        },
-        {
-          categoria: "Pinturas",
-          name: "PLAFON LED 31 CM 12 W",
-          sku: 392,
-          stock: 10,
-          marca: "JUST HOME COLLECTION",
-          precio: 18990,
-        },
-        {
-          categoria: "Pinturas",
-          name: "ASIENTO WC REDONDO PLASTICO BLANCO",
-          sku: 408,
-          stock: 36,
-          marca: "FANALOZA",
-          precio: 12490,
-        },
-        {
-          categoria: "Pinturas",
-          name: "CERRADURA DORMITORIO BOLA BRONCE ENVEJECIDO FX",
-          sku: 452,
-          stock: 32,
-          marca: "FIXSER",
-          precio: 9990,
-        },
-        {
-          categoria: "Pinturas",
-          name: "ADHESIVO CERAMICO EN POLVO STANDARD 25 KG",
-          sku: 518,
-          stock: 48,
-          marca: "BEKRON",
-          precio: 2490,
-        },
-      ];
-    },
+    ...mapActions([
+      "getProducts",
+      "addProduct",
+      "removeProduct",
+      "updateProduct",
+    ]),
 
     editItem(item) {
-      this.editedIndex = this.products.indexOf(item);
+      this.editedIndex = this.tableProducts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.products.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.editedIndex = this.tableProducts.indexOf(item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.products.splice(this.editedIndex, 1);
+      const id = this.products[this.editedIndex].id;
+      this.removeProduct(id);
       this.closeDelete();
     },
-
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -310,9 +236,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.products[this.editedIndex], this.editedItem);
+        const idProduct = this.products[this.editedIndex].id;
+        this.updateProduct({ id: idProduct, data: this.editedItem });
       } else {
-        this.products.push(this.editedItem);
+        this.addProduct(this.editedItem);
       }
       this.close();
     },
