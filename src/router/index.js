@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
+import Inventory from '../views/Inventory.vue'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '*',
-    redirect: '/login'
-  },
-  {
     path: '/',
     name: 'Login',
     component: Login
@@ -22,28 +20,35 @@ const routes = [{
   {
     path: '/sales_history/:id',
     name: 'Detail',
-    component: () => import('../views/Detail.vue'),
+    component: () => import(/* webpackChunkName: "sales_history_detail" */ '../views/Detail.vue'),
+    meta: {
+      login: true
+    }
+
   },
   {
     path: '/sales_history',
     name: 'Sales_history',
-    component: () => import('../views/Sales_history.vue'),
+    component: () => import(/* webpackChunkName: "sales_history" */ '../views/Sales_history.vue'),
+    meta: {
+      login: true
+    }
   },
   {
     path: '/inventory',
     name: 'Inventory',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ '../views/Inventory.vue')
+    component: () => import(/* webpackChunkName: "inventory" */ '../views/Inventory.vue'),
+    meta: {
+      login: true
+    }
   },
   {
     path: '/sale',
     name: 'Sale',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ '../views/Sale.vue')
+    component: () => import( /* webpackChunkName: "sale" */ '../views/Sale.vue'),
+    meta: {
+      login: true
+    }
   }
 
 ]
@@ -53,5 +58,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  let user = firebase.auth().currentUser;
+  let authRequired = to.matched.some(route => route.meta.login);
+  if (!user && authRequired) {
+    next('Login');
+  } else {
+    next();
+  }
+});
 
 export default router
