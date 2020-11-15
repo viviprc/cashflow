@@ -1,15 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
-import Inventory from '../views/Inventory.vue'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    name: 'Login',
-    component: Login
+    redirect: 'Sale'
   },
 
   {
@@ -63,7 +62,7 @@ router.beforeEach((to, from, next) => {
   let user = firebase.auth().currentUser;
   let authRequired = to.matched.some(route => route.meta.login);
   if (!user && authRequired) {
-    next('Login');
+    next('/login');
   } else {
     next();
   }

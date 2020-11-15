@@ -131,7 +131,6 @@
   </div>
 </template>
 <script>
-import firebase from "firebase";
 import { mapState, mapActions } from "vuex";
 export default {
   name: "ProducTable",
@@ -235,11 +234,16 @@ export default {
     },
 
     save() {
+      const parsedItem = {
+        ...this.editedItem,
+        price: parseInt(this.editedItem.price, 10),
+        stock: parseInt(this.editedItem.stock, 10),
+      };
       if (this.editedIndex > -1) {
         const idProduct = this.products[this.editedIndex].id;
-        this.updateProduct({ id: idProduct, data: this.editedItem });
+        this.updateProduct({ id: idProduct, data: this.parsedItem });
       } else {
-        this.addProduct(this.editedItem);
+        this.addProduct(this.parsedItem);
       }
       this.close();
     },
