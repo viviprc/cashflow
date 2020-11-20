@@ -1,13 +1,30 @@
 <template>
   <v-container fluid class="contenedor">
+    <v-row justify="center">
+      <!-- Modal de venta finalizada -->
+      <v-dialog v-model="dialog" max-width="350">
+        <v-card>
+          <v-card-title> ¡Venta realizada exitosamente! </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="resetSale">
+              Cerrar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- termino del modal -->
+    </v-row>
     <v-row>
+      <!-- Columna izquierda, muestras productos agregados a la venta -->
       <v-col
         id="col-one"
         cols="12"
         sm="7"
-        class="d-flex justify-end align-content-space-around flex-wrap pr-10"
+        class="d-flex justify-end align-stretch flex-wrap pr-10"
       >
         <div class="col-one">
+          <!-- Tabla de ventas -->
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -22,23 +39,43 @@
               <tbody>
                 <tr v-for="(item, index) in sale" :key="item.data.name">
                   <td>{{ item.data.name }}</td>
-                  <td><v-text-field :value="item.quantity" @input="(qty) => changeQuantity(qty, index)"></v-text-field></td>
+                  <td>
+                    <v-text-field
+                      :value="item.quantity"
+                      @input="(qty) => changeQuantity(qty, index)"
+                      solo
+                      filled
+                      dense
+                    ></v-text-field>
+                  </td>
                   <td>{{ item.data.price }}</td>
                   <td>{{ parseInt(item.data.price, 10) * item.quantity }}</td>
-                  <td><v-icon @click="eliminateProduct(index)">mdi-delete</v-icon></td>
+                  <td>
+                    <v-icon @click="eliminateProduct(index)">mdi-delete</v-icon>
+                  </td>
                 </tr>
               </tbody>
             </template>
           </v-simple-table>
         </div>
+
         <div class="flex-column justify-end">
-          <h4 class="text-right ma-3">Total ${{saleTotal}}</h4>
-          <v-select :items="['Efectivo', 'Transbank']" v-model="saleType"></v-select>
-          <v-btn color="success" class="ma-2" small @click="saleFinish">Finalizar</v-btn>
-          <v-btn color="error" class="ma-2" small @click="saleCancel">Cancelar</v-btn>
+          <h4 class="text-right ma-3">Total ${{ saleTotal }}</h4>
+          <v-select
+            :items="['Efectivo', 'Transbank']"
+            v-model="saleType"
+          ></v-select>
+
+          <v-btn color="success" class="ma-2" small @click="saleFinish"
+            >Finalizar</v-btn
+          >
+          <v-btn color="error" class="ma-2" small @click="saleCancel"
+            >Cancelar</v-btn
+          >
         </div>
       </v-col>
       <v-divider class="mx-4" vertical></v-divider>
+      <!-- Columna derecha, muestra el buscador y productos encontrados. -->
       <v-col id="col-two" cols="12" sm="4" class="justify-end">
         <div class="search">
           <v-textarea
@@ -111,8 +148,12 @@
               <v-list-item-content>
                 <v-list-item-subtitle>Cantidad</v-list-item-subtitle>
                 <v-text-field
+                  class="mr-15"
                   hide-details="auto"
                   v-model="selectedQuantity"
+                  solo
+                  filled
+                  dense
                 ></v-text-field>
               </v-list-item-content>
             </v-list-item>
@@ -141,33 +182,14 @@ export default {
   name: "Sale",
   data() {
     return {
+      dialog: false,
       search: "",
       selectedQuantity: 1,
       editQuantity: this.selectedQuantity,
       selectedProduct: null,
       sale: [],
       filterArray: [],
-      saleType: 'Efectivo',
-      // products: [
-      //   {
-      //     categoria: "Pinturas",
-      //     name: "ESMALTE AL AGUA PREMIUM SATINADO AZUL LASHA",
-      //     cantidad: 2,
-      //     stock: 23,
-      //     marca: "KOLOR",
-      //     pu: 20990,
-      //     subtotal: 41980,
-      //   },
-      //   {
-      //     categoria: "Pinturas",
-      //     name: 'SET DE PUNTAS IMPACTO #2x2" 5P',
-      //     cantidad: 1,
-      //     stock: 60,
-      //     marca: "UBERMANN",
-      //     pu: 2890,
-      //     subtotal: 2890,
-      //   },
-      // ],
+      saleType: "Efectivo",
     };
   },
   created() {
@@ -180,21 +202,33 @@ export default {
     },
     addToSale() {
       const quantity = parseInt(this.selectedQuantity, 10);
-      this.sale.push({ ...this.selectedProduct, quantity }); 
+      this.sale.push({ ...this.selectedProduct, quantity });
     },
-    eliminateProduct(index){
-      this.sale.splice(index, 1)
+    eliminateProduct(index) {
+      this.sale.splice(index, 1);
     },
-    saleCancel(){
-      this.sale = []
+    saleCancel() {
+      this.sale = [];
     },
-    saleFinish(){
-      this.addSale({type:this.saleType, products: this.sale, total: this.saleTotal})
+    saleFinish() {
+      (this.dialog = true),
+        this.addSale({
+          type: this.saleType,
+          products: this.sale,
+          total: this.saleTotal,
+        });
     },
-    changeQuantity(quantity, index){
-      const validQuantity = quantity === '' ? '0' : quantity
-      this.sale[index].quantity = parseInt(validQuantity)
-    }
+    resetSale() {
+      (this.dialog = false),
+        (this.search = ""),
+        (this.selectedProduct = ""),
+        (this.filterArray = []),
+        (this.sale = []);
+    },
+    changeQuantity(quantity, index) {
+      const validQuantity = quantity === "" ? "0" : quantity;
+      this.sale[index].quantity = parseInt(validQuantity);
+    },
   },
   computed: {
     ...mapState(["products"]),
@@ -222,9 +256,14 @@ export default {
 };
 </script>
 <style lang="scss">
-//  .col-one{
-//      border-bottom: 1px solid;
-//  }
+.v-text-field.v-text-field--solo .v-input__control input {
+  width: 30px;
+}
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  width: 40px;
+}
 @media (max-width: 600px) {
   #col-one {
     order: 2;
