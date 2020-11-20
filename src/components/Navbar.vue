@@ -1,14 +1,18 @@
 <template>
   <v-container fluid class="navbar">
+    <!-- Navbar -->
     <v-app-bar app dark color="blue darken-4">
-      <v-app-bar-nav-icon v-if="authenticated" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        v-if="authenticated"
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
       <h4>CASHFLOW</h4></v-app-bar
     >
     <v-sheet height="100%" class="overflow-hidden" style="position: relative">
       <v-container class="fill-height">
         <v-row align="center" justify="center"> </v-row>
       </v-container>
-
+    <!-- Sidebar -->
       <v-navigation-drawer v-model="drawer" absolute temporary>
         <v-list-item>
           <v-list-item-avatar>
@@ -16,7 +20,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>Usuario</v-list-item-title>
+            <v-list-item-title>{{ user }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -79,13 +83,15 @@ export default {
   data() {
     return {
       drawer: null,
-      authenticated: false
+      authenticated: false,
+      user: ''
     };
   },
-  created(){
-    firebase.auth().onAuthStateChanged(
-      (currentUser)=>{this.authenticated = currentUser}
-    )
+  created() {
+    firebase.auth().onAuthStateChanged((currentUser) => {
+      this.authenticated = currentUser;
+      this.user = currentUser.email;
+    });
   },
   methods: {
     logout() {

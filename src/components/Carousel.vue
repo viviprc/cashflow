@@ -1,4 +1,5 @@
 <template>
+<!-- Carrusel de productos, vista Login -->
 <div id="app">
     <v-carousel :show-arrows="false" cycle height="100%" hide-delimiters >
     <v-carousel-item
@@ -9,7 +10,6 @@
       transition="fade-transition"
     ></v-carousel-item>
   </v-carousel>
-
 </div>
 </template>
 <script>

@@ -23,10 +23,6 @@ export default {
     Sale,
     Sales_history
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
 <style lang="scss">
