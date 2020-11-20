@@ -1,5 +1,6 @@
 <template>
   <div class="productTable">
+    <!-- Buscador de producto -->
     <div class="search">
       <v-card-title class="d-flex justify-center mx-13">
         Buscador
@@ -44,11 +45,11 @@
                 </v-btn>
                 <!-- Fin botón para agregar producto -->
               </template>
+              <!-- Modal para agregar y editar -->
               <v-card>
                 <v-card-title>
                   <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
-
                 <v-card-text>
                   <v-container>
                     <v-row>
@@ -89,7 +90,6 @@
                     </v-row>
                   </v-container>
                 </v-card-text>
-
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="close">
@@ -101,6 +101,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <!-- Modal para confirmar eliminar producto -->
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
                 <v-card-title class="headline"
@@ -139,6 +140,7 @@ export default {
       search: "",
       dialog: false,
       dialogDelete: false,
+      // Headers de la tabla
       headers: [
         {
           text: "Nombre Producto",
@@ -173,12 +175,15 @@ export default {
 
   computed: {
     ...mapState(["products"]),
+    // Condicional para Modal, en agregar o editar
     formTitle() {
       return this.editedIndex === -1 ? "Agregar producto" : "Editar Producto";
     },
+    // Arreglo de productos, sólo con data, sin id.
     tableProducts() {
       return this.products.map((p) => p.data);
     },
+    // Arreglo de productos con id
     productId() {
       return this.products.map((p) => p.id);
     },
@@ -192,7 +197,6 @@ export default {
       val || this.closeDelete();
     },
   },
-
   methods: {
     ...mapActions([
       "getProducts",
@@ -232,7 +236,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     save() {
       const parsedItem = {
         ...this.editedItem,
@@ -241,9 +244,11 @@ export default {
       };
       if (this.editedIndex > -1) {
         const idProduct = this.products[this.editedIndex].id;
-        this.updateProduct({ id: idProduct, data: this.parsedItem });
+
+        this.updateProduct({ id: idProduct, data: parsedItem });
       } else {
-        this.addProduct(this.parsedItem);
+
+        this.addProduct(parsedItem);
       }
       this.close();
     },
