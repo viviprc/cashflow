@@ -12,7 +12,7 @@
       <v-container class="fill-height">
         <v-row align="center" justify="center"> </v-row>
       </v-container>
-    <!-- Sidebar -->
+      <!-- Sidebar -->
       <v-navigation-drawer v-model="drawer" absolute temporary>
         <v-list-item>
           <v-list-item-avatar>
@@ -60,6 +60,17 @@
               </v-list-item-content>
             </v-list-item>
           </router-link>
+          <router-link to="/admin">
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-account-cog</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title>Administrar usuarios</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </router-link>
 
           <v-list-item @click="logout">
             <v-list-item-icon>
@@ -76,6 +87,7 @@
   </v-container>
 </template>
 <script>
+import { mapState } from "vuex";
 import firebase from "firebase/app";
 import "firebase/auth";
 export default {
@@ -84,8 +96,14 @@ export default {
     return {
       drawer: null,
       authenticated: false,
-      user: ''
+      user: "",
     };
+  },
+  computed: {
+    ...mapState("Users", ["users"]),
+    // findUser() {
+    //   return this.users.find((user) => user.data.email === this.user);
+    // },
   },
   created() {
     firebase.auth().onAuthStateChanged((currentUser) => {
@@ -98,7 +116,9 @@ export default {
       firebase
         .auth()
         .signOut()
-        .then(() => this.$router.push("login"));
+        .then(() => {
+          this.$router.push("login")
+          });
     },
   },
 };
