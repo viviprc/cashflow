@@ -2,13 +2,16 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
+import Users from './users'
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     products: [],
-    sales:[]
+    sales:[], 
   },
   mutations: {
     GET_PRODUCTS(state, products) {
@@ -16,13 +19,18 @@ export default new Vuex.Store({
     },
     ADD_PRODUCT(state, payload) {
       state.products.push(payload);
-      console.log(payload)
     },
     GET_SALES(state, sales){
       state.sales = sales
     }
   },
   actions: {
+    getCurrentUserRole({
+      commit
+  }, user) {
+      firebase.firestore().collection('users').where('uid', '==', user.uid).get()
+          .then(snapshot => console.log(snapshot))
+  },
     getProducts({
       commit
     }) {
@@ -67,6 +75,9 @@ export default new Vuex.Store({
     }, payload) {
       firebase.firestore().collection('products').doc(payload.id).update(payload.data)
     },
+    removeSale({commit}, id){
+      firebase.firestore().collection('sales').doc(id).delete()
+    },
     addSale({
       commit
     }, payload) {
@@ -84,8 +95,16 @@ export default new Vuex.Store({
       })
     }
   },
-  modules: {}
+  modules: {
+    Users
+  }
 })
+
+
+
+
+
+
 
 // {
 //   category: "Pinturas",
