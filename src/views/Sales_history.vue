@@ -1,40 +1,34 @@
 <template>
-  <v-container>
-    <h2 class="text-center pa-3">Historial de ventas</h2>
-    <v-simple-table>
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">Fecha</th>
-            <th class="text-left">Modo de pago</th>
-            <th class="text-left">Total</th>
-            <th class="text-left">Detalle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in sales" :key="item.id">
-            <td>{{ parseDate(item.data.date) }}</td>
-            <td>{{ item.data.type }}</td>
-            <td>{{ item.data.total }}</td>
-            <td>
-              <router-link :to="`sales_history/${item.id}`"
-                ><v-icon>mdi-magnify</v-icon></router-link
-              >
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-    <div>
-      <v-divider></v-divider>
-      <h3 class="text-right pa-15">TOTAL:$ {{totalAmount}}</h3>
-    </div>
+   <v-container>
+     <SalesTable />
   </v-container>
 </template>
 <script>
+import SalesTable from '../components/SalesTable'
 import parseDate from '../helpers/date'
 import { mapState, mapActions } from "vuex";
 export default {
+  name:'Sales_history',
+  components:{
+    SalesTable
+
+  },
+  data(){
+    return{
+      search:'',
+      headers: [
+          {
+            text: 'Fecha',
+            align: 'start',
+            sortable: true,
+            value: 'data.date',
+          },
+          { text: 'Modo de pago', value: 'data.type' },
+          { text: 'Total', value: 'data.total' },
+          { text: 'Detalle', value: 'mdi-eye-plus' },
+        ],
+    }
+  },
   computed: {
     ...mapState(["sales"]),
     totalAmount() {
@@ -56,5 +50,10 @@ export default {
 <style lang="scss">
 .container {
   color: #616161;
+}
+.historialList{
+  a {
+    text-decoration: none;
+  }
 }
 </style>
