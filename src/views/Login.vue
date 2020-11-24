@@ -3,6 +3,10 @@
     <Carousel style="position: absolute" />
     <v-overlay :value="overlay" :z-index="zIndex"></v-overlay>
     <v-card elevation="1" outlined width="400" class="mt-13 pa-8">
+      <!-- Alerta de error al loguearse. -->
+      <v-alert v-model="alert" type="error" dismissible>
+        El email o la contraseña ingresada no corresponde.
+      </v-alert>
       <!-- Formulario para loguearse -->
       <v-card-title>Ingresa a tu cuenta</v-card-title>
       <v-form ref="form" lazy-validation class="pa-3">
@@ -13,7 +17,7 @@
           :rules="[rules.required, rules.min]"
           :type="show1 ? 'text' : 'password'"
           name="input-10-1"
-          label="Normal with hint text"
+          label="Contraseña"
           hint="At least 8 characters"
           counter
           @click:append="show1 = !show1"
@@ -39,6 +43,7 @@ export default {
   },
   data() {
     return {
+      alert: false,
       email: "",
       password: "",
       show1: false,
@@ -51,8 +56,7 @@ export default {
       },
     };
   },
-  computed:{
-  },
+  computed: {},
   methods: {
     login() {
       firebase
@@ -62,7 +66,11 @@ export default {
           (accept) => {
             this.$router.push("Sale");
           },
-          (reject) => alert("error")
+          (reject) => {
+            this.alert = true;
+            this.email = "";
+            this.password = "";
+          }
         );
     },
   },
