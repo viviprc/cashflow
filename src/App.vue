@@ -13,6 +13,8 @@ import Login from "./views/Login";
 import Inventory from "./views/Inventory";
 import Sale from "./views/Sale";
 import Sales_history from "./views/Sales_history"
+import Admin from "./views/Admin.vue"
+import {mapActions} from 'vuex'
 
 export default {
   name: "App",
@@ -21,8 +23,15 @@ export default {
     Login,
     Inventory,
     Sale,
-    Sales_history
+    Sales_history,
+    Admin
   },
+  created(){
+    this.getUsers();
+  },
+  methods:{
+    ...mapActions('Users',['getUsers'])
+  }
 };
 </script>
 <style lang="scss">
