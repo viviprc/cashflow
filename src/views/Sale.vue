@@ -24,6 +24,8 @@
         class="d-flex justify-end align-stretch flex-wrap pr-10"
       >
         <div class="col-one">
+              <h3 class="text-center py-3">Nueva Venta</h3>
+
           <!-- Tabla de ventas -->
           <v-simple-table>
             <template v-slot:default>
@@ -81,6 +83,7 @@
           <v-textarea
             append-icon="mdi-magnify"
             class="mx-2"
+            id="buscarProducto"
             label="Buscar..."
             v-model="textFilter"
             rows="1"
@@ -103,8 +106,8 @@
                     :key="item.data.name"
                     @click="select(item)"
                   >
-                    <td>{{ item.data.name }}</td>
-                    <td>{{ item.data.price }}</td>
+                    <td id="nombreBusqueda">{{ item.data.name }}</td>
+                    <td id="precioBusqueda">{{ item.data.price }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -241,7 +244,7 @@ export default {
         this.filterArray = this.products.filter(
           (p) =>
             p.data.name.indexOf(value) !== -1 ||
-            p.data.sku.indexOf(value) !== -1
+            p.data.sku.toString().indexOf(value) !== -1
         );
         this.search = value;
       },
