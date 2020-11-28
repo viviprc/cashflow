@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <v-app-bar app dark color="blue darken-4">
       <v-app-bar-nav-icon
-        v-if="authenticated"
+      v-if="authenticated"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <h4>CASHFLOW</h4></v-app-bar
@@ -20,13 +20,13 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{ user }}</v-list-item-title>
+            <v-list-item-title>{{ userName }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-divider></v-divider>
 
-        <v-list v-if="authenticated" class="sideBar" dense>
+        <v-list class="sideBar" v-if="authenticated" dense>
           <router-link to="/inventory">
             <v-list-item>
               <v-list-item-icon>
@@ -95,21 +95,23 @@ export default {
   data() {
     return {
       drawer: null,
-      authenticated: false,
       user: "",
     };
   },
   computed: {
     ...mapState("Users", ["users"]),
-    // findUser() {
-    //   return this.users.find((user) => user.data.email === this.user);
-    // },
+    userName() {
+     const user = this.users.find((user) => user.data.email === this.user);
+     return user ? user.name : ''
+    },
+    authenticated(){
+      return !!this.user 
+    }
   },
   created() {
-    firebase.auth().onAuthStateChanged((currentUser) => {
-      this.authenticated = currentUser;
-      this.user = currentUser.email;
-    });
+    firebase.auth().onAuthStateChanged((user) => {
+      this.user = user ? user.email : ''
+    })
   },
   methods: {
     logout() {
