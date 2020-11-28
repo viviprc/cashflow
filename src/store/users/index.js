@@ -20,7 +20,7 @@ export default {
         }
     },
     actions: {
-       
+
         addUser({
             commit
         }, user) {
@@ -34,10 +34,25 @@ export default {
                         commit('ADD_USER', userWithId)
                 })
         },
+        getInitialUsers({
+            commit
+        }) {
+            return firebase.firestore().collection('users').get().then(doc => {
+                let users = []
+                doc.forEach((u) => {
+                    users.push({
+                        id: u.id,
+                        data: u.data()
+                    });
+                })
+                commit('GET_USERS', users)
+
+            })
+        },
         getUsers({
             commit
         }) {
-            firebase.firestore().collection('users').onSnapshot((snapshot) => {
+            return firebase.firestore().collection('users').onSnapshot((snapshot) => {
                 let users = []
                 snapshot.forEach((u) => {
                     users.push({

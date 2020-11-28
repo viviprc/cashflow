@@ -26,8 +26,8 @@ const routes = [{
     component: () => import( /* webpackChunkName: "sales_history_detail" */ '../views/Detail.vue'),
     props: true,
     meta: {
-      admin: true,
-      seller: true
+      seller: true,
+      login: true
     }
 
   },
@@ -36,8 +36,8 @@ const routes = [{
     name: 'Sales_history',
     component: () => import( /* webpackChunkName: "sales_history" */ '../views/Sales_history.vue'),
     meta: {
-      admin: true,
-      seller: true
+      seller: true,
+      login: true
     }
   },
   {
@@ -45,8 +45,7 @@ const routes = [{
     name: 'Inventory',
     component: () => import( /* webpackChunkName: "inventory" */ '../views/Inventory.vue'),
     meta: {
-      admin: true,
-      seller: true
+      login: true
     }
   },
   {
@@ -54,8 +53,8 @@ const routes = [{
     name: 'Sale',
     component: () => import( /* webpackChunkName: "sale" */ '../views/Sale.vue'),
     meta: {
-      admin: true,
-      seller: true
+      seller: true,
+      login: true
     }
   },
   {
@@ -63,8 +62,7 @@ const routes = [{
     name: 'Admin',
     component: () => import( /* webpackChunkName: "admin" */ '../views/Admin.vue'),
     meta: {
-      admin: true,
-      seller:true
+      login: true,
     }
   }
 
@@ -77,39 +75,23 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let user = firebase.auth().currentUser;
-  const dbUser = Users.state.users.find(u => u.data.uid === user.uid);
-  // const dataUser = dbUser.data.role;
+  const user = firebase.auth().currentUser;
+  const dbUser = user ? Users.state.users.find(u => u.data.uid === user.uid) : null
+  const role = dbUser ? dbUser.data.role : ''
+  const authRequired = to.matched.some(route => route.meta.login);
+  const sellerPermission = to.matched.some(route => route.meta.seller);
 
-  // const role = dbUser ? dbUser.data.role : ''
-  let authRequired = to.matched.some(route => route.meta.admin);
-  // let sellerPermission = to.matched.some(route => route.meta.seller);
-
-  console.log(dbUser)
   if (!user && authRequired) {
-    next('/login');
-  } else if (dbUser && !authRequired) {
-    next('/sale');
-  } else {
+    next('Login')
+  } else if (!user) {
     next()
+  } else if (user && role == 'admin') {
+    next()
+  } else if (user && role == 'seller' && sellerPermission) {
+    next()
+  } else {
+    next(false)
   }
 });
-
-// router.beforeEach((to, from, next) => {
-//   // let user = firebase.auth().currentUser;
-//   const dbUser = Users.state.users.find(u => u.data.uid === user.uid)
-//   const role = dbUser ? dbUser.data.role : ''
-//   // let authRequired = to.matched.some(route => route.meta.tolog);
-//   let sellerPermission = to.matched.some(route => route.meta.seller);
-
-//   if (role === seller && sellerPermission) {
-//     next('/sale');
-//   } else if (role === seller && !adminPermission) {
-//     next('/sale');
-//   } else {
-//     next()
-//   }
-// });
-
 
 export default router
