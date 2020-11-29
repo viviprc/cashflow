@@ -37,6 +37,7 @@
                 <v-btn
                   color="primary"
                   dark
+                  id="agregarProducto"
                   class="mb-2"
                   v-bind="attrs"
                   v-on="on"
@@ -57,34 +58,40 @@
                         <v-text-field
                           v-model="editedItem.name"
                           label="Nombre"
+                          id="nombreProducto"
                         ></v-text-field>
                         <v-text-field
                           v-model="editedItem.category"
                           label="Categoria"
+                          id="categoriaProducto"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.sku"
                           label="Sku"
+                          id="skuProducto"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.stock"
                           label="Stock"
+                          id="stockProducto"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.trademark"
                           label="Marca"
+                          id="marcaProducto"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.price"
                           label="Precio"
+                          id="precioProducto"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -92,10 +99,10 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
+                  <v-btn id="cancelar" color="blue darken-1" text @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="save">
+                  <v-btn id="guardar" color="blue darken-1" text @click="save">
                     Guardar
                   </v-btn>
                 </v-card-actions>
@@ -112,7 +119,7 @@
                   <v-btn color="blue darken-1" text @click="closeDelete"
                     >Cancelar</v-btn
                   >
-                  <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                  <v-btn id="okBorrar" color="blue darken-1" text @click="deleteItemConfirm"
                     >OK</v-btn
                   >
                   <v-spacer></v-spacer>
@@ -122,7 +129,7 @@
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
+          <v-icon small class="editar mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -158,16 +165,16 @@ export default {
       editedIndex: -1,
       editedItem: {
         name: "",
-        sku: 0,
+        sku: "",
         stock: 0,
-        trademark: 0,
+        trademark: "",
         price: 0,
       },
       defaultItem: {
         name: "",
-        sku: 0,
+        sku: "",
         stock: 0,
-        trademark: 0,
+        trademark: "",
         price: 0,
       },
     };
@@ -238,7 +245,11 @@ export default {
     },
     save() {
       const parsedItem = {
-        ...this.editedItem,
+        // ...this.editedItem,
+        name: this.editedItem.name.toUpperCase(),
+        sku: this.editedItem.sku,
+        category: this.editedItem.category.toUpperCase(),
+        trademark: this.editedItem.trademark.toUpperCase(),
         price: parseInt(this.editedItem.price, 10),
         stock: parseInt(this.editedItem.stock, 10),
       };

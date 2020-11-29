@@ -3,6 +3,7 @@
     <!-- Navbar -->
     <v-app-bar app dark color="blue darken-4">
       <v-app-bar-nav-icon
+      id="Menu"
       v-if="authenticated"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
@@ -28,7 +29,7 @@
 
         <v-list class="sideBar" v-if="authenticated" dense>
           <router-link to="/inventory">
-            <v-list-item>
+            <v-list-item id="Inventory">
               <v-list-item-icon>
                 <v-icon>mdi-format-list-bulleted</v-icon>
               </v-list-item-icon>
@@ -72,12 +73,12 @@
             </v-list-item>
           </router-link>
 
-          <v-list-item @click="logout">
+          <v-list-item id="Logout" @click="logout">
             <v-list-item-icon>
               <v-icon>mdi-account-arrow-right-outline</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
+            <v-list-item-content >
               <v-list-item-title>Cerrar sesión</v-list-item-title>
             </v-list-item-content>
           </v-list-item>

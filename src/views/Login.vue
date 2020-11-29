@@ -10,20 +10,21 @@
       <!-- Formulario para loguearse -->
       <v-card-title>Ingresa a tu cuenta</v-card-title>
       <v-form ref="form" lazy-validation class="pa-3">
-        <v-text-field v-model="email" label="E-mail"></v-text-field>
+        <v-text-field class="correo" v-model="email" label="E-mail"></v-text-field>
         <v-text-field
           v-model="password"
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
           :rules="[rules.required, rules.min]"
           :type="show1 ? 'text' : 'password'"
           name="input-10-1"
+          class="clave"
           label="Contraseña"
           hint="At least 8 characters"
           counter
           @click:append="show1 = !show1"
         ></v-text-field>
         <div class="text-center">
-          <v-btn color="success" class="mt-5" @click="login">
+          <v-btn id="login" color="success" class="mt-5" @click="login">
             Iniciar sesión
           </v-btn>
         </div>

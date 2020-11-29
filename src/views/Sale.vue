@@ -7,7 +7,7 @@
           <v-card-title> ¡Venta realizada exitosamente! </v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="resetSale">
+            <v-btn id="cerrar" color="green darken-1" text @click="resetSale">
               Cerrar
             </v-btn>
           </v-card-actions>
@@ -51,7 +51,7 @@
                     ></v-text-field>
                   </td>
                   <td>{{ item.data.price }}</td>
-                  <td>{{ parseInt(item.data.price, 10) * item.quantity }}</td>
+                  <td class="subtotal">{{ parseInt(item.data.price, 10) * item.quantity }}</td>
                   <td>
                     <v-icon @click="eliminateProduct(index)">mdi-delete</v-icon>
                   </td>
@@ -62,13 +62,13 @@
         </div>
 
         <div class="flex-column justify-end">
-          <h4 class="text-right ma-3">Total ${{ saleTotal }}</h4>
+          <h4 id="totalSale" class="text-right ma-3">Total ${{ saleTotal }}</h4>
           <v-select
             :items="['Efectivo', 'Transbank']"
             v-model="saleType"
           ></v-select>
 
-          <v-btn color="success" class="ma-2" small @click="saleFinish"
+          <v-btn id="finalizar" color="success" class="ma-2" small @click="saleFinish"
             >Finalizar</v-btn
           >
           <v-btn color="error" class="ma-2" small @click="saleCancel"
@@ -92,7 +92,7 @@
         </div>
         <div>
           <template>
-            <v-simple-table>
+            <v-simple-table id="tablaBusqueda">
               <template v-slot:default>
                 <thead>
                   <tr>
@@ -106,8 +106,8 @@
                     :key="item.data.name"
                     @click="select(item)"
                   >
-                    <td id="nombreBusqueda">{{ item.data.name }}</td>
-                    <td id="precioBusqueda">{{ item.data.price }}</td>
+                    <td >{{ item.data.name }}</td>
+                    <td >{{ item.data.price }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -126,7 +126,7 @@
             <v-list-item two-line>
               <v-list-item-content>
                 <v-list-item-subtitle>Nombre producto</v-list-item-subtitle>
-                <v-list-item-title>{{
+                <v-list-item-title id="productName">{{
                   selectedProduct.data.name
                 }}</v-list-item-title>
               </v-list-item-content>
@@ -162,10 +162,11 @@
             </v-list-item>
 
             <div class="text-right ma-5 pt-10">
-              <v-btn color="success" class="ma-2" x-small @click="addToSale"
+              <v-btn id="agregarProducto" color="success" class="ma-2" x-small @click="addToSale"
                 >Agregar</v-btn
               >
               <v-btn
+                id="cancelarProducto"
                 color="error"
                 class="ma-2"
                 x-small
@@ -206,6 +207,9 @@ export default {
     addToSale() {
       const quantity = parseInt(this.selectedQuantity, 10);
       this.sale.push({ ...this.selectedProduct, quantity });
+      this.search= '';
+      this.selectedProduct='';
+      this.filterArray=[]
     },
     eliminateProduct(index) {
       this.sale.splice(index, 1);
