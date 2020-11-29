@@ -24,14 +24,14 @@
                       <v-text-field
                         v-model="editedItem.name"
                         label="Nombre"
-                        :disabled="editedIndex > -1 "
+                        :disabled="editedIndex > -1"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.email"
                         label="E-mail"
-                        :disabled="editedIndex > -1 "
+                        :disabled="editedIndex > -1"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" v-if="editedIndex === -1">
@@ -40,11 +40,12 @@
                         label="Contraseña"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <!-- <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.role"
                         label="Rol"
-                      ></v-text-field>
+                      ></v-text-field> -->
+                      <v-select :items="items" v-model="editedItem.role" label="Roles"></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -77,6 +78,7 @@ export default {
     return {
       dialog: false,
       dialogDelete: false,
+      items:['seller', 'admin','none'],
       headers: [
         {
           text: "Nombre",
