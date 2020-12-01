@@ -65,8 +65,8 @@ export default {
         },
         updateUser({
             commit
-        }, user) {
-            firebase.firestore().collection('users').doc(user.id).update(user.data)
+        }, payload) {
+            firebase.firestore().collection('users').doc(payload.id).update(payload.data)
         },
     },
 
