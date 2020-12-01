@@ -8,7 +8,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+              <v-btn id="agregarUsuario" color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 Agregar usuario
               </v-btn>
             </template>
@@ -17,11 +17,12 @@
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
 
-              <v-card-text>
+              <v-card-text >
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
+                        id="nombreUsuario"
                         v-model="editedItem.name"
                         label="Nombre"
                         :disabled="editedIndex > -1"
@@ -29,6 +30,7 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
+                        id="emailUsuario"
                         v-model="editedItem.email"
                         label="E-mail"
                         :disabled="editedIndex > -1"
@@ -36,16 +38,13 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="4" v-if="editedIndex === -1">
                       <v-text-field
+                        id="claveUsuario"
                         v-model="editedItem.password"
                         label="Contraseña"
                       ></v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.role"
-                        label="Rol"
-                      ></v-text-field> -->
-                      <v-select :items="items" v-model="editedItem.role" label="Roles"></v-select>
+                    <v-col>
+                      <v-select id="rolUsuario" :items="items" v-model="editedItem.role" label="Roles"></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -56,7 +55,7 @@
                 <v-btn color="blue darken-1" text @click="close">
                   Cancelar
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="save">
+                <v-btn id="guardarUsuario" color="blue darken-1" text @click="save">
                   Guardar
                 </v-btn>
               </v-card-actions>
@@ -78,7 +77,7 @@ export default {
     return {
       dialog: false,
       dialogDelete: false,
-      items:['seller', 'admin','none'],
+      items: ["seller", "admin", "none"],
       headers: [
         {
           text: "Nombre",
@@ -92,16 +91,16 @@ export default {
       ],
       editedIndex: -1,
       editedItem: {
-        name: "",
-        email: 0,
-        password: 0,
-        role: 0,
+        name: '',
+        email: '',
+        password: '',
+        role: '',
       },
       defaultItem: {
-        name: "",
-        email: 0,
-        password: 0,
-        role: 0,
+        name: '',
+        email: '',
+        password: '',
+        role: '',
       },
     };
   },
