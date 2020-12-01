@@ -62,7 +62,7 @@
             </v-list-item>
           </router-link>
           <router-link to="/admin">
-            <v-list-item>
+            <v-list-item id="Admin">
               <v-list-item-icon>
                 <v-icon>mdi-account-cog</v-icon>
               </v-list-item-icon>
@@ -102,8 +102,9 @@ export default {
   computed: {
     ...mapState("Users", ["users"]),
     userName() {
-     const user = this.users.find((user) => user.data.email === this.user);
-     return user ? user.name : ''
+     const user = this.users.find((u) => u.data.email === this.user);
+     return user ? user.data.name : ''
+
     },
     authenticated(){
       return !!this.user 
