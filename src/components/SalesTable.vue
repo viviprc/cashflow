@@ -14,7 +14,6 @@
         :headers="headers"
         :items="parsedSales"
         :search="search"
-        sort-by="calories"
         class="elevation-1"
       >
         <template v-slot:top>
@@ -46,7 +45,6 @@ export default {
       {
         text: "Fecha",
         align: "start",
-        sortable: true,
         value: "data.date",
       },
       { text: "Modo de pago", value: "data.type" },
@@ -57,8 +55,16 @@ export default {
 
   computed: {
     ...mapState(["sales"]),
+    orderSales() {
+      return this.sales.sort(function (a, b) {
+        a = new Date(a.data.date);
+        b = new Date(b.data.date);
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
+    },
+
     parsedSales() {
-      return this.sales.map((s) => ({
+      return this.orderSales.map((s) => ({
         ...s,
         data: {
           ...s.data,
