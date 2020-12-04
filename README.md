@@ -22,14 +22,9 @@ Para compilar tu proyecto, ejecutar la siguiente instrucción:
 yarn build
 ```
 
-### Ejecutar los unit tests
-```
-yarn test:unit
-```
-
 ### Ejecutar end-to-end tests
 ```
-yarn test:e2e
+npm run test:e2e
 ```
 ### Ruta de acceso al proyecto
-https://github.com/viviprc/cashflow
+

@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!-- Tabla de usuarios -->
     <v-data-table :headers="headers" :items="usersTable" class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat>
@@ -12,6 +13,7 @@
                 Agregar usuario
               </v-btn>
             </template>
+            <!-- Card para editar rol de usuarios -->
             <v-card>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>

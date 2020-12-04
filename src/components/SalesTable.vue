@@ -2,6 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
+        <!-- Buscador -->
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -10,6 +11,7 @@
           hide-details
         ></v-text-field>
       </v-card-title>
+      <!-- Tabla de ventas -->
       <v-data-table
         :headers="headers"
         :items="parsedSales"

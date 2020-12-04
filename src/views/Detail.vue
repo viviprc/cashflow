@@ -3,6 +3,7 @@
       <h2 class="text-center mt-3">Resumen de venta</h2>
     <v-row>
       <v-col sm="4">
+        <!-- Detalle de la venta -->
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-subtitle>Fecha</v-list-item-subtitle>
@@ -27,6 +28,7 @@
         </v-list-item>
       </v-col>
     </v-row>
+    <!-- Productos de la venta -->
     <v-simple-table class="mt-8">
       <template v-slot:default>
         <thead>
@@ -65,6 +67,5 @@ export default {
   methods:{
     parseDate
   }
- 
 };
 </script>

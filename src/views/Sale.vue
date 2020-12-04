@@ -13,7 +13,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!-- termino del modal -->
     </v-row>
     <v-row>
       <!-- Columna izquierda, muestras productos agregados a la venta -->
@@ -79,6 +78,7 @@
       <v-divider class="mx-4" vertical></v-divider>
       <!-- Columna derecha, muestra el buscador y productos encontrados. -->
       <v-col id="col-two" cols="12" sm="4" class="justify-end">
+        <!-- Buscador de productos -->
         <div class="search">
           <v-textarea
             append-icon="mdi-magnify"
@@ -92,6 +92,7 @@
         </div>
         <div>
           <template>
+            <!-- Tabla de productos de la busqueda -->
             <v-simple-table id="tablaBusqueda">
               <template v-slot:default>
                 <thead>
@@ -113,7 +114,7 @@
               </template>
             </v-simple-table>
           </template>
-
+          <!-- Lista con el detalle del producto seleccionado -->
           <v-list v-if="selectedProduct" class="pl-10" dense>
             <v-list-item two-line>
               <v-list-item-content>

@@ -44,7 +44,6 @@
                 >
                   AGREGAR PRODUCTO
                 </v-btn>
-                <!-- Fin botón para agregar producto -->
               </template>
               <!-- Modal para agregar y editar -->
               <v-card>
@@ -99,7 +98,12 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn id="cancelar" color="blue darken-1" text @click="close">
+                  <v-btn
+                    id="cancelar"
+                    color="blue darken-1"
+                    text
+                    @click="close"
+                  >
                     Cancelar
                   </v-btn>
                   <v-btn id="guardar" color="blue darken-1" text @click="save">
@@ -119,7 +123,11 @@
                   <v-btn color="blue darken-1" text @click="closeDelete"
                     >Cancelar</v-btn
                   >
-                  <v-btn id="okBorrar" color="blue darken-1" text @click="deleteItemConfirm"
+                  <v-btn
+                    id="okBorrar"
+                    color="blue darken-1"
+                    text
+                    @click="deleteItemConfirm"
                     >OK</v-btn
                   >
                   <v-spacer></v-spacer>
@@ -245,7 +253,6 @@ export default {
     },
     save() {
       const parsedItem = {
-        // ...this.editedItem,
         name: this.editedItem.name.toUpperCase(),
         sku: this.editedItem.sku,
         category: this.editedItem.category.toUpperCase(),
@@ -258,7 +265,6 @@ export default {
 
         this.updateProduct({ id: idProduct, data: parsedItem });
       } else {
-
         this.addProduct(parsedItem);
       }
       this.close();
