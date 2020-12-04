@@ -27,4 +27,4 @@ yarn build
 npm run test:e2e
 ```
 ### Ruta de acceso al proyecto
-
+https://cashflow-1ba5a.web.app/
