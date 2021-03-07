@@ -23,7 +23,7 @@
         class="d-flex justify-end align-stretch flex-wrap pr-10"
       >
         <div class="col-one">
-              <h3 class="text-center py-3">Nueva Venta</h3>
+          <h3 class="text-center py-3">Nueva Venta</h3>
 
           <!-- Tabla de ventas -->
           <v-simple-table>
@@ -38,7 +38,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in sale" :key="item.data.name">
+                <tr v-for="(item, index) in sale" :key="getKey(item)">
                   <td>{{ item.data.name }}</td>
                   <td>
                     <v-text-field
@@ -50,7 +50,9 @@
                     ></v-text-field>
                   </td>
                   <td>{{ item.data.price }}</td>
-                  <td class="subtotal">{{ parseInt(item.data.price, 10) * item.quantity }}</td>
+                  <td class="subtotal">
+                    {{ parseInt(item.data.price, 10) * item.quantity }}
+                  </td>
                   <td>
                     <v-icon @click="eliminateProduct(index)">mdi-delete</v-icon>
                   </td>
@@ -66,8 +68,75 @@
             :items="['Efectivo', 'Transbank']"
             v-model="saleType"
           ></v-select>
+          <v-dialog v-model="dialog2" max-width="500">
+            <!-- Prueba -->
+            <v-card>
+              <v-card-title>
+                <span>Agregar producto a la venta</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6">
+                      <v-text-field
+                        v-model="addProductManually.data.name"
+                        label="Nombre"
+                        id="nombreProducto"
+                      ></v-text-field>
+                      <v-text-field
+                        v-model="addProductManually.data.sku"
+                        label="Sku"
+                        id="skuProducto"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                      <v-text-field
+                        v-model="addProductManually.data.quantity"
+                        label="Quantity"
+                        id="quantityProducto"
+                      ></v-text-field>
+                      <v-text-field
+                        v-model="addProductManually.data.price"
+                        label="Price"
+                        id="priceProducto"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn id="cancelar" color="blue darken-1" text @click="close">
+                  Cancelar
+                </v-btn>
+                <v-btn
+                  id="guardar"
+                  color="blue darken-1"
+                  text
+                  @click="addManuallyToSale"
+                >
+                  Agregar
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+            <!-- Prueba -->
+          </v-dialog>
 
-          <v-btn id="finalizar" color="success" class="ma-2" small @click="saleFinish"
+          <v-btn
+            id="agregar"
+            color="warning"
+            class="ma-2"
+            small
+            @click.stop="dialog2 = true"
+            >Agregar</v-btn
+          >
+
+          <v-btn
+            id="finalizar"
+            color="success"
+            class="ma-2"
+            small
+            @click="saleFinish"
             >Finalizar</v-btn
           >
           <v-btn color="error" class="ma-2" small @click="saleCancel"
@@ -104,11 +173,11 @@
                 <tbody>
                   <tr
                     v-for="item in filterArray"
-                    :key="item.data.name"
+                    :key="getKey(item)"
                     @click="select(item)"
                   >
-                    <td >{{ item.data.name }}</td>
-                    <td >{{ item.data.price }}</td>
+                    <td>{{ item.data.name }}</td>
+                    <td>{{ item.data.price }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -163,7 +232,12 @@
             </v-list-item>
 
             <div class="text-right ma-5 pt-10">
-              <v-btn id="agregarProducto" color="success" class="ma-2" x-small @click="addToSale"
+              <v-btn
+                id="agregarProducto"
+                color="success"
+                class="ma-2"
+                x-small
+                @click="addToSale"
                 >Agregar</v-btn
               >
               <v-btn
@@ -195,6 +269,16 @@ export default {
       sale: [],
       filterArray: [],
       saleType: "Efectivo",
+      dialog2: false,
+      addProductManually: {
+        data: {
+          name: "",
+          sku: "10000",
+          quantity: 1,
+          price: "",
+          trademark: "Generico",
+        },
+      },
     };
   },
   created() {
@@ -202,15 +286,28 @@ export default {
   },
   methods: {
     ...mapActions(["getProducts", "addSale"]),
+    getKey(item) {
+      return `${item.data.name}${item.data.sku}`;
+    },
     select(item) {
       this.selectedProduct = item;
     },
     addToSale() {
       const quantity = parseInt(this.selectedQuantity, 10);
       this.sale.push({ ...this.selectedProduct, quantity });
-      this.search= '';
-      this.selectedProduct='';
-      this.filterArray=[]
+      this.search = "";
+      this.selectedProduct = "";
+      this.filterArray = [];
+    },
+    addManuallyToSale() {
+      this.sale.push({
+        data: {
+          ...this.addProductManually.data,
+          price: parseInt(this.addProductManually.data.price),
+        },
+        quantity: parseInt(this.addProductManually.data.quantity),
+      });
+      this.close();
     },
     eliminateProduct(index) {
       this.sale.splice(index, 1);
@@ -237,6 +334,13 @@ export default {
       const validQuantity = quantity === "" ? "0" : quantity;
       this.sale[index].quantity = parseInt(validQuantity);
     },
+    close() {
+      this.dialog2 = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
   },
   computed: {
     ...mapState(["products"]),
@@ -246,11 +350,17 @@ export default {
       },
       set(value) {
         value = value.toUpperCase();
-        this.filterArray = this.products.filter(
-          (p) =>
-            p.data.name.indexOf(value) !== -1 ||
-            p.data.sku.toString().indexOf(value) !== -1
-        );
+        const terms = value.split(" ");
+
+        this.filterArray = value
+          ? this.products.filter(
+              (p) =>
+                terms.reduce(
+                  (isMatch, term) => isMatch && p.data.name.includes(term),
+                  true
+                ) || p.data.sku.toString().indexOf(value) !== -1
+            )
+          : [];
         this.search = value;
       },
     },
