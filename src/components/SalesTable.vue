@@ -32,6 +32,13 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-card class="my-2" v-if="isSearchValid">
+      <v-card-title>Venta Total Diaria {{search}} </v-card-title>
+      <v-card-title>${{ dateTotal }}</v-card-title>
+    </v-card>
+    <!-- <div v-if="isSearchValid">
+      <p>{{ dateTotal }}</p>
+    </div> -->
   </v-container>
 </template>
 <script>
@@ -73,6 +80,17 @@ export default {
           date: ParseDate(s.data.date),
         },
       }));
+    },
+    isSearchValid() {
+      return /\d{1,2}\/\d{2}\/\d{4}/.test(this.search);
+    },
+    dateTotal() {
+      return this.isSearchValid
+        ? this.parsedSales.reduce(
+            (acumulado, actual) => acumulado + actual.data.total,
+            0
+          )
+        : null;
     },
   },
   methods: {

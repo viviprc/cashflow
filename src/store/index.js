@@ -80,6 +80,7 @@ export default new Vuex.Store({
     }, payload) {
       const batch = firebase.firestore().batch()
       payload.products.forEach(product => {
+        if(!product.id){ return }
         const productRef = firebase.firestore().collection('products').doc(product.id)
         batch.update(productRef, {
           stock: product.data.stock - product.quantity
