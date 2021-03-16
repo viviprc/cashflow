@@ -10,7 +10,11 @@
       <!-- Formulario para loguearse -->
       <v-card-title>Ingresa a tu cuenta</v-card-title>
       <v-form ref="form" lazy-validation class="pa-3">
-        <v-text-field class="correo" v-model="email" label="E-mail"></v-text-field>
+        <v-text-field
+          class="correo"
+          v-model="email"
+          label="E-mail"
+        ></v-text-field>
         <v-text-field
           v-model="password"
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -34,28 +38,28 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import "firebase/auth";
-import Carousel from "../components/Carousel";
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import Carousel from '../components/Carousel'
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     Carousel,
   },
   data() {
     return {
       alert: false,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       show1: false,
       overlay: true,
       zIndex: 0,
       rules: {
-        required: (value) => !!value || "Required.",
-        min: (v) => v.length >= 8 || "Min 8 characters",
+        required: (value) => !!value || 'Required.',
+        min: (v) => v.length >= 8 || 'Min 8 characters',
         emailMatch: () => `El email y contraseña que ingresaste no coinciden`,
       },
-    };
+    }
   },
   computed: {},
   methods: {
@@ -65,15 +69,15 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           (accept) => {
-            this.$router.push("Sale");
+            this.$router.push('Sale')
           },
           (reject) => {
-            this.alert = true;
-            this.email = "";
-            this.password = "";
+            this.alert = true
+            this.email = ''
+            this.password = ''
           }
-        );
+        )
     },
   },
-};
+}
 </script>

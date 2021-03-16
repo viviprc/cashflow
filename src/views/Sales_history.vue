@@ -4,20 +4,20 @@
   </v-container>
 </template>
 <script>
-import SalesTable from "../components/SalesTable";
-import { mapActions } from "vuex";
+import SalesTable from '../components/SalesTable'
+import { mapActions } from 'vuex'
 export default {
-  name: "Sales_history",
+  name: 'Sales_history',
   components: {
     SalesTable,
   },
   created() {
-    this.getSales();
+    this.getSales()
   },
   methods: {
-    ...mapActions(["getSales"]),
+    ...mapActions(['getSales']),
   },
-};
+}
 </script>
 <style lang="scss">
 .container {

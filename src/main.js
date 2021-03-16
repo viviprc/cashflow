@@ -5,18 +5,17 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import firebase from 'firebase/app'
 
-
 var firebaseConfig = {
-  apiKey: "AIzaSyDIIvhLZUShhpKYQOPJ3RLgXbNdFrzXmdU",
-  authDomain: "cashflow-1ba5a.firebaseapp.com",
-  databaseURL: "https://cashflow-1ba5a.firebaseio.com",
-  projectId: "cashflow-1ba5a",
-  storageBucket: "cashflow-1ba5a.appspot.com",
-  messagingSenderId: "889248759721",
-  appId: "1:889248759721:web:02216daa0c02b4fb864eb8"
-};
+  apiKey: 'AIzaSyDIIvhLZUShhpKYQOPJ3RLgXbNdFrzXmdU',
+  authDomain: 'cashflow-1ba5a.firebaseapp.com',
+  databaseURL: 'https://cashflow-1ba5a.firebaseio.com',
+  projectId: 'cashflow-1ba5a',
+  storageBucket: 'cashflow-1ba5a.appspot.com',
+  messagingSenderId: '889248759721',
+  appId: '1:889248759721:web:02216daa0c02b4fb864eb8',
+}
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig)
 
 firebase.auth().onAuthStateChanged(async function (user) {
   if (user) {
@@ -27,7 +26,7 @@ firebase.auth().onAuthStateChanged(async function (user) {
     router,
     store,
     vuetify,
-    render: h => h(App)
+    render: (h) => h(App),
   }).$mount('#app')
 })
 

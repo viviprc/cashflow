@@ -4,18 +4,18 @@
   </div>
 </template>
 <script>
-import ProductTable from "../components/ProductTable";
-import {mapActions} from 'vuex'
+import ProductTable from '../components/ProductTable'
+import { mapActions } from 'vuex'
 export default {
-  name: "Inventory",
+  name: 'Inventory',
   components: {
     ProductTable,
   },
-  created(){
+  created() {
     this.getProducts()
   },
-  methods:{
-    ...mapActions(['getProducts'])
-  }
-};
+  methods: {
+    ...mapActions(['getProducts']),
+  },
+}
 </script>
