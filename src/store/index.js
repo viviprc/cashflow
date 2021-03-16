@@ -4,13 +4,13 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
 import Users from './users'
+import Sales from './sales'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     products: [],
-    sales: [],
   },
   mutations: {
     GET_PRODUCTS(state, products) {
@@ -42,21 +42,6 @@ export default new Vuex.Store({
           commit('GET_PRODUCTS', products)
         })
     },
-    getSales({ commit }) {
-      firebase
-        .firestore()
-        .collection('sales')
-        .onSnapshot((snapshot) => {
-          let sales = []
-          snapshot.forEach((s) => {
-            sales.push({
-              id: s.id,
-              data: s.data(),
-            })
-          })
-          commit('GET_SALES', sales)
-        })
-    },
     addProduct({ commit }, product) {
       firebase.firestore().collection('products').add(product),
         commit('ADD_PRODUCT', product)
@@ -71,34 +56,9 @@ export default new Vuex.Store({
         .doc(payload.id)
         .update(payload.data)
     },
-    removeSale({ commit }, id) {
-      firebase.firestore().collection('sales').doc(id).delete()
-    },
-    addSale({ commit }, payload) {
-      const batch = firebase.firestore().batch()
-      payload.products.forEach((product) => {
-        if (!product.id) {
-          return
-        }
-        const productRef = firebase
-          .firestore()
-          .collection('products')
-          .doc(product.id)
-        batch.update(productRef, {
-          stock: product.data.stock - product.quantity,
-        })
-      })
-      batch.commit()
-      firebase
-        .firestore()
-        .collection('sales')
-        .add({
-          date: Date.now(),
-          ...payload,
-        })
-    },
   },
   modules: {
     Users,
+    Sales,
   },
 })
