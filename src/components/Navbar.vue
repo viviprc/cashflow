@@ -3,8 +3,8 @@
     <!-- Navbar -->
     <v-app-bar app dark color="blue darken-4">
       <v-app-bar-nav-icon
-      id="Menu"
-      v-if="authenticated"
+        id="Menu"
+        v-if="authenticated"
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <h4>CASHFLOW</h4></v-app-bar
@@ -78,7 +78,7 @@
               <v-icon>mdi-account-arrow-right-outline</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content >
+            <v-list-item-content>
               <v-list-item-title>Cerrar sesión</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -88,27 +88,26 @@
   </v-container>
 </template>
 <script>
-import { mapState } from "vuex";
-import firebase from "firebase/app";
-import "firebase/auth";
+import { mapState } from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   data() {
     return {
       drawer: null,
-      user: "",
-    };
+      user: '',
+    }
   },
   computed: {
-    ...mapState("Users", ["users"]),
+    ...mapState('Users', ['users']),
     userName() {
-     const user = this.users.find((u) => u.data.email === this.user);
-     return user ? user.data.name : ''
-
+      const user = this.users.find((u) => u.data.email === this.user)
+      return user ? user.data.name : ''
     },
-    authenticated(){
-      return !!this.user 
-    }
+    authenticated() {
+      return !!this.user
+    },
   },
   created() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -121,11 +120,11 @@ export default {
         .auth()
         .signOut()
         .then(() => {
-          this.$router.push("login")
-          });
+          this.$router.push('login')
+        })
     },
   },
-};
+}
 </script>
 <style lang="scss">
 div.navbar {

@@ -1,13 +1,15 @@
 <template>
   <v-container>
-      <h2 class="text-center mt-3">Resumen de venta</h2>
+    <h2 class="text-center mt-3">Resumen de venta</h2>
     <v-row>
       <v-col sm="4">
         <!-- Detalle de la venta -->
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-subtitle>Fecha</v-list-item-subtitle>
-            <v-list-item-title>{{parseDate(currentSale.data.date)}}</v-list-item-title>
+            <v-list-item-title>{{
+              parseDate(currentSale.data.date)
+            }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-col>
@@ -15,7 +17,7 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-subtitle>Medio de pago</v-list-item-subtitle>
-            <v-list-item-title>{{currentSale.data.type}}</v-list-item-title>
+            <v-list-item-title>{{ currentSale.data.type }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-col>
@@ -23,7 +25,7 @@
         <v-list-item two-line>
           <v-list-item-content>
             <v-list-item-subtitle>Total</v-list-item-subtitle>
-            <v-list-item-title>${{currentSale.data.total}}</v-list-item-title>
+            <v-list-item-title>${{ currentSale.data.total }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-col>
@@ -55,17 +57,17 @@
 </template>
 <script>
 import parseDate from '../helpers/date'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 export default {
-  name: "Detail",
-  computed:{
+  name: 'Detail',
+  computed: {
     ...mapState(['sales']),
-    currentSale(){
-      return this.sales.find((sale) => sale.id === this.$route.params.id )
-    }
+    currentSale() {
+      return this.sales.find((sale) => sale.id === this.$route.params.id)
+    },
   },
-  methods:{
-    parseDate
-  }
-};
+  methods: {
+    parseDate,
+  },
+}
 </script>

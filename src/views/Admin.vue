@@ -9,7 +9,14 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn id="agregarUsuario" color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+              <v-btn
+                id="agregarUsuario"
+                color="primary"
+                dark
+                class="mb-2"
+                v-bind="attrs"
+                v-on="on"
+              >
                 Agregar usuario
               </v-btn>
             </template>
@@ -19,7 +26,7 @@
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
 
-              <v-card-text >
+              <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
@@ -46,7 +53,12 @@
                       ></v-text-field>
                     </v-col>
                     <v-col>
-                      <v-select id="rolUsuario" :items="items" v-model="editedItem.role" label="Roles"></v-select>
+                      <v-select
+                        id="rolUsuario"
+                        :items="items"
+                        v-model="editedItem.role"
+                        label="Roles"
+                      ></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -57,7 +69,12 @@
                 <v-btn color="blue darken-1" text @click="close">
                   Cancelar
                 </v-btn>
-                <v-btn id="guardarUsuario" color="blue darken-1" text @click="save">
+                <v-btn
+                  id="guardarUsuario"
+                  color="blue darken-1"
+                  text
+                  @click="save"
+                >
                   Guardar
                 </v-btn>
               </v-card-actions>
@@ -72,24 +89,24 @@
   </v-container>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 export default {
-  name: "Admin",
+  name: 'Admin',
   data() {
     return {
       dialog: false,
       dialogDelete: false,
-      items: ["seller", "admin", "none"],
+      items: ['seller', 'admin', 'none'],
       headers: [
         {
-          text: "Nombre",
-          align: "start",
+          text: 'Nombre',
+          align: 'start',
           sortable: false,
-          value: "name",
+          value: 'name',
         },
-        { text: "Email", value: "email" },
-        { text: "Rol", value: "role" },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: 'Email', value: 'email' },
+        { text: 'Rol', value: 'role' },
+        { text: 'Actions', value: 'actions', sortable: false },
       ],
       editedIndex: -1,
       editedItem: {
@@ -104,54 +121,54 @@ export default {
         password: '',
         role: '',
       },
-    };
+    }
   },
 
   computed: {
-    ...mapState("Users", ["users"]),
+    ...mapState('Users', ['users']),
     formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Usuario" : "Editar Usuario";
+      return this.editedIndex === -1 ? 'Nuevo Usuario' : 'Editar Usuario'
     },
     usersTable() {
-      return this.users.map((u) => u.data);
+      return this.users.map((u) => u.data)
     },
   },
 
   watch: {
     dialog(val) {
-      val || this.close();
+      val || this.close()
     },
     dialogDelete(val) {
-      val || this.closeDelete();
+      val || this.closeDelete()
     },
   },
 
   methods: {
-    ...mapActions("Users", ["addUser", "updateUser"]),
+    ...mapActions('Users', ['addUser', 'updateUser']),
 
     editItem(item) {
-      this.editedIndex = this.usersTable.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.editedIndex = this.usersTable.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     },
 
     close() {
-      this.dialog = false;
+      this.dialog = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
 
     save() {
       if (this.editedIndex > -1) {
-        const idUser = this.users[this.editedIndex].id;
-        this.updateUser({ id: idUser, data: this.editedItem });
+        const idUser = this.users[this.editedIndex].id
+        this.updateUser({ id: idUser, data: this.editedItem })
       } else {
-        this.addUser(this.editedItem);
+        this.addUser(this.editedItem)
       }
-      this.close();
+      this.close()
     },
   },
-};
+}
 </script>

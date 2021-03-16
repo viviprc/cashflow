@@ -256,48 +256,48 @@
   >
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 export default {
-  name: "Sale",
+  name: 'Sale',
   data() {
     return {
       dialog: false,
-      search: "",
+      search: '',
       selectedQuantity: 1,
       editQuantity: this.selectedQuantity,
       selectedProduct: null,
       sale: [],
       filterArray: [],
-      saleType: "Efectivo",
+      saleType: 'Efectivo',
       dialog2: false,
       addProductManually: {
         data: {
-          name: "",
-          sku: "10000",
+          name: '',
+          sku: '10000',
           quantity: 1,
-          price: "",
-          trademark: "Generico",
+          price: '',
+          trademark: 'Generico',
         },
       },
-    };
+    }
   },
   created() {
-    this.getProducts();
+    this.getProducts()
   },
   methods: {
-    ...mapActions(["getProducts", "addSale"]),
+    ...mapActions(['getProducts', 'addSale']),
     getKey(item) {
-      return `${item.data.name}${item.data.sku}`;
+      return `${item.data.name}${item.data.sku}`
     },
     select(item) {
-      this.selectedProduct = item;
+      this.selectedProduct = item
     },
     addToSale() {
-      const quantity = parseInt(this.selectedQuantity, 10);
-      this.sale.push({ ...this.selectedProduct, quantity });
-      this.search = "";
-      this.selectedProduct = "";
-      this.filterArray = [];
+      const quantity = parseInt(this.selectedQuantity, 10)
+      this.sale.push({ ...this.selectedProduct, quantity })
+      this.search = ''
+      this.selectedProduct = ''
+      this.filterArray = []
     },
     addManuallyToSale() {
       this.sale.push({
@@ -306,51 +306,51 @@ export default {
           price: parseInt(this.addProductManually.data.price),
         },
         quantity: parseInt(this.addProductManually.data.quantity),
-      });
-      this.close();
+      })
+      this.close()
     },
     eliminateProduct(index) {
-      this.sale.splice(index, 1);
+      this.sale.splice(index, 1)
     },
     saleCancel() {
-      this.sale = [];
+      this.sale = []
     },
     saleFinish() {
-      (this.dialog = true),
+      ;(this.dialog = true),
         this.addSale({
           type: this.saleType,
           products: this.sale,
           total: this.saleTotal,
-        });
+        })
     },
     resetSale() {
-      (this.dialog = false),
-        (this.search = ""),
-        (this.selectedProduct = ""),
+      ;(this.dialog = false),
+        (this.search = ''),
+        (this.selectedProduct = ''),
         (this.filterArray = []),
-        (this.sale = []);
+        (this.sale = [])
     },
     changeQuantity(quantity, index) {
-      const validQuantity = quantity === "" ? "0" : quantity;
-      this.sale[index].quantity = parseInt(validQuantity);
+      const validQuantity = quantity === '' ? '0' : quantity
+      this.sale[index].quantity = parseInt(validQuantity)
     },
     close() {
-      this.dialog2 = false;
+      this.dialog2 = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
   },
   computed: {
-    ...mapState(["products"]),
+    ...mapState(['products']),
     textFilter: {
       get() {
-        return this.search;
+        return this.search
       },
       set(value) {
-        value = value.toUpperCase();
-        const terms = value.split(" ");
+        value = value.toUpperCase()
+        const terms = value.split(' ')
 
         this.filterArray = value
           ? this.products.filter(
@@ -360,18 +360,18 @@ export default {
                   true
                 ) || p.data.sku.toString().indexOf(value) !== -1
             )
-          : [];
-        this.search = value;
+          : []
+        this.search = value
       },
     },
     saleTotal() {
       return this.sale.reduce(
         (acumulado, actual) => acumulado + actual.data.price * actual.quantity,
         0
-      );
+      )
     },
   },
-};
+}
 </script>
 <style lang="scss">
 .v-text-field.v-text-field--solo .v-input__control input {

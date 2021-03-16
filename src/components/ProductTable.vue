@@ -147,109 +147,109 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 export default {
-  name: "ProducTable",
+  name: 'ProducTable',
   data() {
     return {
-      search: "",
+      search: '',
       dialog: false,
       dialogDelete: false,
       // Headers de la tabla
       headers: [
         {
-          text: "Nombre Producto",
-          align: "start",
+          text: 'Nombre Producto',
+          align: 'start',
           sortable: false,
-          value: "name",
+          value: 'name',
         },
-        { text: "Categoria", value: "category" },
-        { text: "Sku", value: "sku" },
-        { text: "Stock", value: "stock" },
-        { text: "Marca", value: "trademark" },
-        { text: "Precio", value: "price" },
-        { text: "Acciones", value: "actions", sortable: false },
+        { text: 'Categoria', value: 'category' },
+        { text: 'Sku', value: 'sku' },
+        { text: 'Stock', value: 'stock' },
+        { text: 'Marca', value: 'trademark' },
+        { text: 'Precio', value: 'price' },
+        { text: 'Acciones', value: 'actions', sortable: false },
       ],
       editedIndex: -1,
       editedItem: {
-        name: "",
-        sku: "",
+        name: '',
+        sku: '',
         stock: 0,
-        trademark: "",
+        trademark: '',
         price: 0,
       },
       defaultItem: {
-        name: "",
-        sku: "",
+        name: '',
+        sku: '',
         stock: 0,
-        trademark: "",
+        trademark: '',
         price: 0,
       },
-    };
+    }
   },
 
   computed: {
-    ...mapState(["products"]),
+    ...mapState(['products']),
     // Condicional para Modal, en agregar o editar
     formTitle() {
-      return this.editedIndex === -1 ? "Agregar producto" : "Editar Producto";
+      return this.editedIndex === -1 ? 'Agregar producto' : 'Editar Producto'
     },
     // Arreglo de productos, sólo con data, sin id.
     tableProducts() {
-      return this.products.map((p) => p.data);
+      return this.products.map((p) => p.data)
     },
     // Arreglo de productos con id
     productId() {
-      return this.products.map((p) => p.id);
+      return this.products.map((p) => p.id)
     },
   },
 
   watch: {
     dialog(val) {
-      val || this.close();
+      val || this.close()
     },
     dialogDelete(val) {
-      val || this.closeDelete();
+      val || this.closeDelete()
     },
   },
   methods: {
     ...mapActions([
-      "getProducts",
-      "addProduct",
-      "removeProduct",
-      "updateProduct",
+      'getProducts',
+      'addProduct',
+      'removeProduct',
+      'updateProduct',
     ]),
 
     editItem(item) {
-      this.editedIndex = this.tableProducts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.editedIndex = this.tableProducts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.tableProducts.indexOf(item);
-      this.dialogDelete = true;
+      this.editedIndex = this.tableProducts.indexOf(item)
+      this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      const id = this.products[this.editedIndex].id;
-      this.removeProduct(id);
-      this.closeDelete();
+      const id = this.products[this.editedIndex].id
+      this.removeProduct(id)
+      this.closeDelete()
     },
     close() {
-      this.dialog = false;
+      this.dialog = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
 
     closeDelete() {
-      this.dialogDelete = false;
+      this.dialogDelete = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
     save() {
       const parsedItem = {
@@ -259,18 +259,18 @@ export default {
         trademark: this.editedItem.trademark.toUpperCase(),
         price: parseInt(this.editedItem.price, 10),
         stock: parseInt(this.editedItem.stock, 10),
-      };
-      if (this.editedIndex > -1) {
-        const idProduct = this.products[this.editedIndex].id;
-
-        this.updateProduct({ id: idProduct, data: parsedItem });
-      } else {
-        this.addProduct(parsedItem);
       }
-      this.close();
+      if (this.editedIndex > -1) {
+        const idProduct = this.products[this.editedIndex].id
+
+        this.updateProduct({ id: idProduct, data: parsedItem })
+      } else {
+        this.addProduct(parsedItem)
+      }
+      this.close()
     },
   },
-};
+}
 </script>
 <style lang="scss">
 .productTable {

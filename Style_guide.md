@@ -1,7 +1,7 @@
 GUÍA DE ESTILOS
 
 Tipografía
- -Ubuntu /weight bold (700)
+-Ubuntu /weight bold (700)
 
 -Roboto/ weigth regular (400)
 
