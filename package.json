@@ -7,7 +7,18 @@
     "build": "vue-cli-service build",
     "deploy": "vue-cli-service build && firebase deploy",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e"
+    "test:e2e": "vue-cli-service test:e2e",
+    "prettify": "prettier --write ."
+  },
+  "lint-staged": {
+    "*.{vue,js,css,scss,json}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "core-js": "^3.6.5",
