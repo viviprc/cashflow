@@ -285,7 +285,8 @@ export default {
     this.getProducts()
   },
   methods: {
-    ...mapActions(['getProducts', 'addSale']),
+    ...mapActions('Sales', ['addSale']),
+    ...mapActions(['getProducts']),
     getKey(item) {
       return `${item.data.name}${item.data.sku}`
     },
