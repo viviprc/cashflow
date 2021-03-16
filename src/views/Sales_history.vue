@@ -1,15 +1,23 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-date-picker v-model="date"></v-date-picker>
-    </v-row>
-
-    <SalesTable :sales="currentDateSales" />
+  <v-container class="sales-history">
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header class="sales-history--title">
+          Fecha seleccionada: {{ formattedDate }}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-row justify="center">
+            <v-date-picker v-model="date"></v-date-picker
+          ></v-row>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <v-card class="my-2">
-      <v-card-title>Venta Total Diaria {{ date }} </v-card-title>
-      <v-card-title>${{ dateTotal }}</v-card-title>
+      <v-card-title>Venta total: ${{ dateTotal }}</v-card-title>
     </v-card>
+
+    <SalesTable :sales="currentDateSales" />
   </v-container>
 </template>
 
@@ -34,6 +42,9 @@ export default {
   },
   computed: {
     ...mapState('Sales', ['sales']),
+    formattedDate() {
+      return this.date.split('-').reverse().join('/')
+    },
     currentDateSales() {
       return this.sales[this.date] || []
     },
@@ -59,9 +70,11 @@ export default {
 .container {
   color: #616161;
 }
-.historialList {
-  a {
-    text-decoration: none;
+.sales-history {
+  .sales-history--title {
+    font-size: 20px;
+    font-weight: 500;
+    padding: 16px;
   }
 }
 </style>

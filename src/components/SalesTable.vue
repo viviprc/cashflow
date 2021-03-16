@@ -6,11 +6,13 @@
     :search="search"
     :items-per-page="-1"
     hide-default-footer
-    class="elevation-1"
+    class="sales-history--table elevation-1"
   >
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>Historial de Ventas</v-toolbar-title>
+        <v-toolbar-title class="sales-history--table-title"
+          >Historial de Ventas</v-toolbar-title
+        >
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
       </v-toolbar>
@@ -68,3 +70,11 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.sales-history--table {
+  .sales-history--table-title {
+    font-weight: 500;
+  }
+}
+</style>
