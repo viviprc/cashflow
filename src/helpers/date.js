@@ -18,8 +18,16 @@ export function toInternationalFormat(date) {
   return `${year}-${month}-${day}`
 }
 
-function parseDate(date) {
-  const actualDate = new Date(date)
+// Transforma una fecha AAAA-MM-DD en sus MS de inicio y término
+export function getDayTimeRange(intFormatDate) {
+  const floor = new Date(`${intFormatDate} 00:00`)
+  const ceil = new Date(`${intFormatDate} 23:59`)
+
+  return [floor.getTime(), ceil.getTime()]
+}
+
+function parseDate(dateInMs) {
+  const actualDate = new Date(dateInMs)
   const { day, month, year, hours, minutes } = toJSON(actualDate)
 
   return `${day}/${month}/${year} - ${hours}:${minutes}`

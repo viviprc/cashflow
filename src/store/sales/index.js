@@ -1,6 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-import { toInternationalFormat } from '../../helpers/date'
+import { getDayTimeRange } from '../../helpers/date'
 
 export default {
   namespaced: true,
@@ -19,10 +19,13 @@ export default {
     getSales({ commit, getters }, { date, forceUpdate = false }) {
       if (getters.getSalesByDate(date) && !forceUpdate) return
 
+      const [floor, ceil] = getDayTimeRange(date)
+
       firebase
         .firestore()
         .collection('sales')
-        .where('internationalDate', '==', date)
+        .where('date', '>=', floor)
+        .where('date', '<=', ceil)
         .get()
         .then((snapshot) => {
           let sales = []
@@ -59,7 +62,6 @@ export default {
         .collection('sales')
         .add({
           date: Date.now(),
-          internationalDate: toInternationalFormat(new Date()),
           ...payload,
         })
     },
