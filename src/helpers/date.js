@@ -2,13 +2,27 @@ function withZero(number) {
   return number < 10 ? `0${number}` : number
 }
 
+function toJSON(date) {
+  return {
+    month: withZero(date.getMonth() + 1),
+    day: withZero(date.getDate()),
+    hours: withZero(date.getHours()),
+    minutes: withZero(date.getMinutes()),
+    year: date.getFullYear(),
+  }
+}
+
+// Retorna un string en formato internacional AAAA-MM-DD
+export function toInternationalFormat(date) {
+  const { year, month, day } = toJSON(date)
+  return `${year}-${month}-${day}`
+}
+
 function parseDate(date) {
   const actualDate = new Date(date)
-  const month = withZero(actualDate.getMonth() + 1)
-  const day = withZero(actualDate.getDate())
-  const hours = withZero(actualDate.getHours())
-  const minutes = withZero(actualDate.getMinutes())
-  return `${day}/${month}/${actualDate.getFullYear()} - ${hours}:${minutes}`
+  const { day, month, year, hours, minutes } = toJSON(actualDate)
+
+  return `${day}/${month}/${year} - ${hours}:${minutes}`
 }
 
 export default parseDate
